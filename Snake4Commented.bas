@@ -63,12 +63,12 @@ end             'this ends "sub Intro"
 
 
 sub SelectGameplay   'you select the type of gameplay you want
-enter=0 : x=0 : lx=1 'set "enter", "x", and "lx" (lx means last x, or previous x)^
-while enter=0        'while you have not pressed <Enter>*
+space_key=0 : x=0 : lx=1 'set "space_key", "x", and "lx" (lx means last x, or previous x)^
+while space_key=0        'while you have not pressed <Space>*
  if lx!=x then       'if "lx" (last x) is different (!=) than "x"...
   if x=chr(27) + chr(9) then slct=slct-1  'if you pushed down subtract 1 from SeLeCT
   if x=chr(27) + chr(10) then slct=slct+1 'if you pushed  up    add    1  to  SeLeCT
-  if x=chr(13) then enter=1  'if you pushed <Enter> than set the variable "enter" to 1*
+  if x=chr(32) then space_key=1  'if you pushed <Space> than set the variable "enter" to 1*
   cls                        'CLear Screen
   if slct<0 then slct=4      'if SeLeCT is too small, than wrap it around
   if slct>4 then slct=0      'if SeLeCT is too large, than wrap it around
@@ -77,6 +77,8 @@ while enter=0        'while you have not pressed <Enter>*
   print "Medium"             'display "Meduim" 
   print "Hard"               'display "Hard"
   print "Death"              'display "Death"
+  print ""
+  print "(Up/Down to Select, Space to continue)"
   rect 0,(slct*15)+4,45,(slct+1)*15, color rgb(0,0,0) 'display a RECTangle where SeLeCT is
  fi                  'end the "if "lx" (last x) is different (!=) than "x"..."
  lx=x                'LastX is now equal to current X
@@ -110,23 +112,23 @@ lx=1 'x position of the back of the snake,            Last  X
 ly=1 'y position of the back of the snake,            Last  Y
 dim pos(width+1,height+1) 'dimension the array, to slightly bigger that what is needed. If you want to know the...
 for x=0 to width+1      'loops through x (width)             '...in depth, detailed reason, feel free to email me
- for y=0 to height+1    'loops through y (height)
-  pos(x,y)=0            'make pos (position) entirely 0's
- next y                 'adds 1 to ... y (height)
+  for y=0 to height+1    'loops through y (height)
+    pos(x,y)=0            'make pos (position) entirely 0's
+  next y                 'adds 1 to ... y (height)
 next x                  'adds 1 to ... x (width)
 for x=1 to startlength  'loops through x (width) until up to where snake ends
- pos(x,1)=x             'creates the snake
+  pos(x,1)=x             'creates the snake
 next x                  'adds 1 to ... x (width)
 end                     'end "sub MakeSnake"
 
 sub SnakeGrow        'Grow the snake
 if dead=0 then       'if you're still alive
- for x=1 to width    'loops through x (width)
-  for y=1 to height  'loops through y (height)
-   if pos(x,y)>0 then pos(x,y)=pos(x,y)+grow  'add "grow" to whatever is part of the snake
-  next y             'adds 1 to ... y (height)
- next x              'adds 1 to ... x (width)
- score=score+1       'add to your score
+  for x=1 to width    'loops through x (width)
+    for y=1 to height  'loops through y (height)
+      if pos(x,y)>0 then pos(x,y)=pos(x,y)+grow  'add "grow" to whatever is part of the snake
+    next y             'adds 1 to ... y (height)
+  next x              'adds 1 to ... x (width)
+  score=score+1       'add to your score
 fi                   'end "if you're still alive"
 delaytime=delaytime*speedup  'change delaytime
 end                  'end "sub SnakeGrow"
@@ -134,9 +136,9 @@ end                  'end "sub SnakeGrow"
 sub MakeFood    'make the food
 z=0             '^^
 while z=0
- x=round((rnd)*(width-1))+1    'at a random x...
- y=round((rnd)*(height-1))+1   '...and random y...
- if pos(x,y)=0 then z=1 : pos(x,y)=-1 '...and if no snake at that position, make the food there and exit loop
+  x=round((rnd)*(width-1))+1    'at a random x...
+  y=round((rnd)*(height-1))+1   '...and random y...
+  if pos(x,y)=0 then z=1 : pos(x,y)=-1 '...and if no snake at that position, make the food there and exit loop
 wend 're-loop if a snake was at that position
 end  'end "sub MakeFood"
 
@@ -154,18 +156,18 @@ if dir=25 then 'if moving LEFT
  if n=-1 then foodeaten=1 : length=length+grow   'if food, grow
 fi
 if dir=26 then 'if moving UP
- n=pos(fx,fy-1)
- if fy<2 then dead=1                             'if you'll hit the wall, you're dead
- if n>1 then dead=1                              'if you'll hit yourself, you're dead
- if n<2 then fy=fy-1 : pos(fx,fy)=length+1       'if empty or food, move in
- if n=-1 then foodeaten=1 : length=length+grow   'if food, grow
+  n=pos(fx,fy-1)
+  if fy<2 then dead=1                             'if you'll hit the wall, you're dead
+  if n>1 then dead=1                              'if you'll hit yourself, you're dead
+  if n<2 then fy=fy-1 : pos(fx,fy)=length+1       'if empty or food, move in
+  if n=-1 then foodeaten=1 : length=length+grow   'if food, grow
 fi
 if dir=27 then 'if moving RIGHT
- n=pos(fx+1,fy)
- if fx+1>width then dead=1                       'if you'll hit the wall, you're dead
- if n>1 then dead=1                              'if you'll hit yourself, you're dead
- if n<2 then fx=fx+1 : pos(fx,fy)=length+1       'if empty or food, move in
- if n=-1 then foodeaten=1 : length=length+grow   'if food, grow
+  n=pos(fx+1,fy)
+  if fx+1>width then dead=1                       'if you'll hit the wall, you're dead
+  if n>1 then dead=1                              'if you'll hit yourself, you're dead
+  if n<2 then fx=fx+1 : pos(fx,fy)=length+1       'if empty or food, move in
+  if n=-1 then foodeaten=1 : length=length+grow   'if food, grow
 fi
 if dir=28 then 'if moving DOWN
  n=pos(fx,fy+1)
@@ -175,12 +177,12 @@ if dir=28 then 'if moving DOWN
  if n=-1 then foodeaten=1 : length=length+grow   'if food, grow
 fi
 if dead=0 then                  'if alive
- for x=1 to width
-  for y=1 to height
-   if pos(x,y)=1 then lx=x : ly=y          'check where lx (last x) and ly (last y) are
-   if pos(x,y)>0 then pos(x,y)=pos(x,y)-1  'move the snake, delete last block, will make more sense if you uncomment...
-  next y 'add 1 to y                                                      '...Debug2 and Debug3 where you see "###"
- next x  'add 1 to x
+  for x=1 to width
+    for y=1 to height
+      if pos(x,y)=1 then lx=x : ly=y          'check where lx (last x) and ly (last y) are
+      if pos(x,y)>0 then pos(x,y)=pos(x,y)-1  'move the snake, delete last block, will make more sense if you uncomment...
+    next y 'add 1 to y                                                      '...Debug2 and Debug3 where you see "###"
+  next x  'add 1 to x
 fi                              'end "if alive"
 end               'end "sub Move"
 
@@ -189,15 +191,15 @@ rect 0,0,480,640, color rgb(f,f,f) filled                                       
 rect lx*b-(b-1), ly*b-(b-1), STEP b-1, b-1, color rgb(f,f,f) filled         
 rect 0, 0, b*width, b*height, color rgb(0,0,100)
 for x=1 to width   'search through pos array...
- for y=1 to height 'search through pos array...
-  if pos(x,y)>0 then rect x*b-(b-1), y*b-(b-1), STEP b-1, b-1, color rgb(0,f,0) filled   'draw snake
-  if pos(x,y)<0 then rect x*b-(b-1), y*b-(b-1), STEP b-1, b-1, color rgb(f,0,0) filled   'draw food
- next y            'search through pos array...
+  for y=1 to height 'search through pos array...
+    if pos(x,y)>0 then rect x*b-(b-1), y*b-(b-1), STEP b-1, b-1, color rgb(0,f,0) filled   'draw snake
+    if pos(x,y)<0 then rect x*b-(b-1), y*b-(b-1), STEP b-1, b-1, color rgb(f,0,0) filled   'draw food
+  next y            'search through pos array...
 next x             'search through pos array...
 at width*b+2,2 : print "Score: ";score                                                   'draw score on left of board
 end                                                                                      'end "sub Display"
 
-'if you want to figure out the physics for how this snake game works, uncomment Debug2 and Debug3 where you see "###"
+'if you want to figure out the physics for how this snake game works, uncomment Debug2 and Debug3 where you see "###" (main function)
 
 sub Debug1                                     'displays where the food was made
 at width*b+2,14 : print "x=";x;", y=";y
@@ -211,8 +213,8 @@ end
 sub Debug3                                     'displays the values of the array pos, basically the board, but text
 '(with Debug2)
 for x=1 to width
- for y=1 to height
-  at (x*b)*2, (y*b+(b*height)+2)*2 : print pos(x,y)
- next y
+  for y=1 to height
+    at (x*b)*2, (y*b+(b*height)+2)*2 : print pos(x,y)
+  next y
 next x
 end
